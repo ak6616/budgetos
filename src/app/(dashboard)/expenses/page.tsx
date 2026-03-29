@@ -162,7 +162,7 @@ export default function ExpensesPage() {
           }}
         >
           <DialogTrigger render={<Button />}>
-              <PlusIcon className="h-4 w-4 mr-1" /> Add Expense
+            <PlusIcon className="h-4 w-4 mr-1" /> Add Expense
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
