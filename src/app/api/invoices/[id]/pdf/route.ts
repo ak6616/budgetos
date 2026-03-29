@@ -202,11 +202,12 @@ export async function GET(
       .from(invoiceItems)
       .where(eq(invoiceItems.invoiceId, id));
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const pdfBuffer = await renderToBuffer(
-      React.createElement(InvoicePDF, { invoice, items, business, client })
+      React.createElement(InvoicePDF, { invoice, items, business, client }) as any
     );
 
-    return new NextResponse(pdfBuffer, {
+    return new NextResponse(new Uint8Array(pdfBuffer), {
       headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition": `attachment; filename="invoice-${invoice.invoiceNumber}.pdf"`,
