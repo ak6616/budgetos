@@ -80,6 +80,11 @@ export default function LoginPage() {
           </p>
         </CardFooter>
       </form>
+      <div className="mx-6 mb-6 rounded-md border border-dashed border-muted-foreground/30 bg-muted/50 px-4 py-3 text-sm">
+        <p className="mb-1 font-medium text-muted-foreground">Test credentials</p>
+        <p className="text-muted-foreground">Email: <span className="font-mono">test@budgetos.app</span></p>
+        <p className="text-muted-foreground">Password: <span className="font-mono">Test123!</span></p>
+      </div>
     </Card>
   );
 }
