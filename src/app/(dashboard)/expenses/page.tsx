@@ -161,10 +161,8 @@ export default function ExpensesPage() {
             if (!open) resetForm();
           }}
         >
-          <DialogTrigger asChild>
-            <Button>
+          <DialogTrigger render={<Button />}>
               <PlusIcon className="h-4 w-4 mr-1" /> Add Expense
-            </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
@@ -204,7 +202,7 @@ export default function ExpensesPage() {
                 <Select
                   value={form.categoryId}
                   onValueChange={(v) =>
-                    setForm((f) => ({ ...f, categoryId: v }))
+                    setForm((f) => ({ ...f, categoryId: v ?? "" }))
                   }
                 >
                   <SelectTrigger id="category">

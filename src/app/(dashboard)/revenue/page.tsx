@@ -87,10 +87,8 @@ export default function RevenuePage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Revenue</h1>
-        <Button asChild>
-          <Link href="/invoices/new">
+        <Button render={<Link href="/invoices/new" />}>
             <FileTextIcon className="h-4 w-4 mr-1" /> New Invoice
-          </Link>
         </Button>
       </div>
 
