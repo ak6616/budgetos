@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" rx="6" fill="#16A34A"/>
+  <!-- Coin circle -->
+  <circle cx="16" cy="15" r="10" fill="#FCD34D"/>
+  <circle cx="16" cy="15" r="8" fill="#F59E0B"/>
+  <!-- Dollar sign -->
+  <text x="12.5" y="20" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#78350F">$</text>
+  <!-- Pie chart slices bottom right -->
+  <circle cx="23" cy="24" r="5" fill="#15803D"/>
+  <path d="M23 24 L23 19 A5 5 0 0 1 27.3 21.5 Z" fill="#4ADE80"/>
+  <path d="M23 24 L27.3 21.5 A5 5 0 0 1 25.5 28.3 Z" fill="#86EFAC"/>
+</svg>
