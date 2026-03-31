@@ -1,11 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
+import { isDemoWriteRequest } from "@/lib/demo-mode";
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX = 60;
 const ipRequests = new Map<string, { count: number; resetAt: number }>();
 
 export function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith("/api/")) {
+  const { pathname } = request.nextUrl;
+
+  if (pathname.startsWith("/api/")) {
+    // Demo mode: intercept write requests
+    if (isDemoWriteRequest(request.method, pathname)) {
+      return NextResponse.json({
+        success: true,
+        demo: true,
+        message: "Demo mode – zmiany nie zostały zapisane",
+      });
+    }
+
+    // Rate limiting
     const ip =
       request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
     const now = Date.now();

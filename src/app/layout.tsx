@@ -35,7 +35,7 @@ export default function RootLayout({
         <AuthProvider>
           <TooltipProvider>{children}</TooltipProvider>
         </AuthProvider>
-      <DemoModeBanner />
+        <DemoModeBanner />
       </body>
     </html>
   );
