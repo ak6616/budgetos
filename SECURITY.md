@@ -1,78 +1,72 @@
 # Security Policy
 
-## Supported Versions
-
-This project is actively maintained. Security fixes are applied to the latest version only.
-
-| Version | Supported |
-| ------- | --------- |
-| Latest  | ✅        |
-| Older   | ❌        |
-
 ## Reporting a Vulnerability
 
-**Please do not report security vulnerabilities through public GitHub issues.**
+Lunovate takes security seriously. We appreciate your efforts to responsibly disclose your findings.
 
-If you discover a security vulnerability, please report it responsibly:
+**Do not report security vulnerabilities through public GitHub issues.**
 
-1. **Email:** Send details to the Lunovate security team via the contact information on [lunovate.com](https://lunovate.com).
-2. **Subject:** Use the prefix `[SECURITY]` in your email subject line.
-3. **Include:**
-   - Description of the vulnerability
-   - Steps to reproduce
-   - Potential impact
-   - Any suggested mitigations (optional)
+### How to Report
 
-## Response Timeline
+Please report vulnerabilities via email to: **security@lunovate.io**
 
-| Stage | SLA |
-|-------|-----|
-| Acknowledgement | 48 hours |
-| Initial assessment | 5 business days |
-| Fix / patch | 30 days for HIGH/CRITICAL, 90 days for MEDIUM/LOW |
-| Public disclosure | After patch is released |
+Include the following in your report:
+- Type of vulnerability (e.g., XSS, SQL Injection, CSRF, broken auth)
+- Full path of the affected file or URL
+- Proof-of-concept or reproduction steps
+- Potential impact / CVSS score estimate (if known)
 
-We follow responsible disclosure principles. We will coordinate with you on the disclosure timeline.
+### Response SLA
+
+| Stage | Timeframe |
+|-------|-----------|
+| Initial acknowledgement | Within **48 hours** |
+| Triage and severity assessment | Within **5 business days** |
+| Remediation (critical/high) | Within **14 days** |
+| Remediation (medium/low) | Within **30 days** |
+| Public disclosure | After patch is deployed, coordinated with reporter |
+
+We follow a **90-day coordinated disclosure** policy. If you have not received a response within 48 hours, please follow up at the same email.
 
 ## Security Standards
 
-This project is developed and maintained in accordance with:
+All Lunovate projects are developed and maintained in compliance with:
 
-- [OWASP Top 10 (2021)](https://owasp.org/www-project-top-ten/)
-- [OWASP ASVS Level 2](https://owasp.org/www-project-application-security-verification-standard/)
-- [NIST Cybersecurity Framework](https://www.nist.gov/cyberframework)
-- ISO 27001 information security principles
-- RODO/GDPR (for projects handling personal data)
-
-## Automated Security Controls
-
-This repository uses automated security scanning:
-
-- **CodeQL SAST** — Static analysis on every PR
-- **Semgrep** — OWASP Top 10 rule enforcement
-- **Gitleaks** — Secrets scanning with push protection
-- **npm audit** — Dependency vulnerability scanning
-- **OWASP ZAP** — Weekly dynamic application security testing
+- **[OWASP Top 10 (2021)](https://owasp.org/Top10/)** — all critical web application security risks are actively mitigated
+- **[OWASP ASVS Level 2](https://owasp.org/www-project-application-security-verification-standard/)** — Application Security Verification Standard at Level 2 is the minimum baseline for all production services
+- **[NIST Cybersecurity Framework](https://www.nist.gov/cyberframework)** — Identify, Protect, Detect, Respond, Recover
+- **ISO/IEC 27001 principles** — information security management controls
+- **RODO / GDPR** — EU General Data Protection Regulation for all personal data processing
+- **Ustawa o Krajowym Systemie Cyberbezpieczeństwa** — Polish national cybersecurity requirements
 
 ## Scope
 
 ### In Scope
-- Authentication and authorization flaws
-- Injection vulnerabilities (SQL, XSS, command injection)
-- Sensitive data exposure
-- Security misconfiguration
-- Using components with known vulnerabilities
+
+- All web application endpoints and APIs in this repository
+- Authentication and authorization mechanisms
+- Data validation and sanitization
+- Session management
+- Secrets and credentials handling
+- Dependencies with known CVEs
+- CI/CD pipeline security misconfigurations
 
 ### Out of Scope
-- Denial of service attacks
-- Social engineering
-- Issues in third-party dependencies (please report to the upstream project)
-- Issues requiring physical access
 
-## Bug Bounty
+- Denial of Service (DoS/DDoS) attacks
+- Social engineering attacks targeting Lunovate employees
+- Physical security
+- Issues in third-party services that Lunovate has no control over
+- Findings from automated scanners without manual validation
+- Rate limiting / brute force on non-sensitive endpoints
+- Missing security headers on non-production / preview deployments
 
-This project does not currently offer a bug bounty program. We are grateful for responsible disclosures and will acknowledge contributors in our security advisories.
+## Supported Versions
 
----
+Only the latest production version of each service receives security fixes.
+Older or preview deployments are not eligible for security support.
 
-*This security policy is maintained by the Lunovate DevSecOps team.*
+## Acknowledgements
+
+We thank the security research community for helping keep Lunovate and our users safe.
+Responsible reporters will be acknowledged in our release notes (unless they request anonymity).
