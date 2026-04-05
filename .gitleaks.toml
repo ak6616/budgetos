@@ -1,0 +1,14 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Lunovate project allowlist"
+paths = [
+  ".gitleaks.toml",
+  "package-lock.json",
+  "yarn.lock",
+]
+regexes = [
+  "NEXT_PUBLIC_",
+  "STORYBOOK_",
+]
