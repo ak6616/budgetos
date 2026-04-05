@@ -1,0 +1,44 @@
+name: DAST — OWASP ZAP Baseline Scan
+on:
+  schedule:
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Target URL to scan (defaults to Vercel production)"
+        required: false
+        default: "https://budgetos-b6d8obyoa-ak6616s-projects.vercel.app"
+
+jobs:
+  zap-baseline:
+    name: ZAP Baseline Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set target URL
+        id: target
+        run: |
+          TARGET="${{ github.event.inputs.target || 'https://budgetos-b6d8obyoa-ak6616s-projects.vercel.app' }}"
+          echo "url=$TARGET" >> $GITHUB_OUTPUT
+
+      - name: ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          target: ${{ steps.target.outputs.url }}
+          rules_file_name: ".zap/rules.tsv"
+          cmd_options: "-a"
+          fail_action: false
+        continue-on-error: true
+
+      - name: Upload ZAP report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: zap-report-budgetos
+          path: report_html.html
+          retention-days: 30
