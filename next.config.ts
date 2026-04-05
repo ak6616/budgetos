@@ -1,8 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  async headersasync headers() {
+  async headers() {
     return [
       {
         source: '/(.*)',
@@ -34,7 +33,7 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  poweredByHeader: false
+  poweredByHeader: false,
 };
 
 export default nextConfig;
