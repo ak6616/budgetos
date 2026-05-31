@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { transactions, categories } from "@/lib/db/schema";
-import { getBusinessIdFromRequest } from "@/lib/auth";
+import { requireBusinessId } from "@/lib/api-auth";
 import { eq, and, sql, gte, lt } from "drizzle-orm";
 
 export async function GET(req: NextRequest) {
   try {
-    const businessId = getBusinessIdFromRequest(req);
+    const businessId = await requireBusinessId(req);
     const url = new URL(req.url);
     const year = parseInt(url.searchParams.get("year") || String(new Date().getFullYear()));
     const month = parseInt(url.searchParams.get("month") || String(new Date().getMonth() + 1));

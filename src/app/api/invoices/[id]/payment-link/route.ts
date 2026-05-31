@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { invoices, businesses } from "@/lib/db/schema";
-import { getBusinessIdFromRequest } from "@/lib/auth";
+import { requireBusinessId } from "@/lib/api-auth";
 import { stripe } from "@/lib/stripe";
 import { eq, and } from "drizzle-orm";
 
@@ -10,7 +10,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const businessId = getBusinessIdFromRequest(req);
+    const businessId = await requireBusinessId(req);
     const { id } = await params;
 
     const [invoice] = await db

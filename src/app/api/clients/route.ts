@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { clients } from "@/lib/db/schema";
-import { getBusinessIdFromRequest } from "@/lib/auth";
+import { requireBusinessId } from "@/lib/api-auth";
 import { eq } from "drizzle-orm";
 
 const createSchema = z.object({
@@ -14,7 +14,7 @@ const createSchema = z.object({
 
 export async function GET(req: NextRequest) {
   try {
-    const businessId = getBusinessIdFromRequest(req);
+    const businessId = await requireBusinessId(req);
     const rows = await db
       .select()
       .from(clients)
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const businessId = getBusinessIdFromRequest(req);
+    const businessId = await requireBusinessId(req);
     const body = await req.json();
     const data = createSchema.parse(body);
 

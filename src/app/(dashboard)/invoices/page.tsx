@@ -43,15 +43,17 @@ export default function InvoicesPage() {
   const router = useRouter();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   async function handleDownload(inv: Invoice) {
+    setLoadError(null);
     try {
       await downloadFile(
         `/invoices/${inv.id}/pdf`,
         `invoice-${inv.invoiceNumber}.pdf`
       );
-    } catch {
-      // błąd pobierania ignorowany cicho — przycisk pozostaje aktywny
+    } catch (err) {
+      setLoadError(err instanceof Error ? err.message : "Failed to download PDF");
     }
   }
 
@@ -59,8 +61,9 @@ export default function InvoicesPage() {
     try {
       const data = await apiFetch<Invoice[]>("/invoices");
       setInvoices(data);
-    } catch {
-      // API may not be ready
+      setLoadError(null);
+    } catch (err) {
+      setLoadError(err instanceof Error ? err.message : "Failed to load invoices");
     } finally {
       setLoading(false);
     }
@@ -83,6 +86,11 @@ export default function InvoicesPage() {
 
   return (
     <div className="space-y-6">
+      {loadError && (
+        <div className="rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {loadError}
+        </div>
+      )}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Invoices</h1>
         <Button render={<Link href="/invoices/new" />}>

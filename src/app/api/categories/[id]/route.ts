@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { categories } from "@/lib/db/schema";
-import { getBusinessIdFromRequest } from "@/lib/auth";
+import { requireBusinessId } from "@/lib/api-auth";
 import { eq, and } from "drizzle-orm";
 
 export async function DELETE(
@@ -9,7 +9,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const businessId = getBusinessIdFromRequest(req);
+    const businessId = await requireBusinessId(req);
     const { id } = await params;
 
     const [deleted] = await db

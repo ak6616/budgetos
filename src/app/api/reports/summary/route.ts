@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { transactions, categories } from "@/lib/db/schema";
-import { getBusinessIdFromRequest } from "@/lib/auth";
+import { requireBusinessId } from "@/lib/api-auth";
 import { eq, and, sql, gte } from "drizzle-orm";
 
 export async function GET(req: NextRequest) {
   try {
-    const businessId = getBusinessIdFromRequest(req);
+    const businessId = await requireBusinessId(req);
     const year = new Date().getFullYear();
     const startDate = `${year}-01-01`;
 

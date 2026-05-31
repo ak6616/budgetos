@@ -52,6 +52,7 @@ export default function RevenuePage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -61,8 +62,9 @@ export default function RevenuePage() {
       ]);
       setTransactions(txRes.data);
       setInvoices(invRes);
-    } catch {
-      // API may not be ready
+      setLoadError(null);
+    } catch (err) {
+      setLoadError(err instanceof Error ? err.message : "Failed to load revenue");
     } finally {
       setLoading(false);
     }
@@ -85,6 +87,11 @@ export default function RevenuePage() {
 
   return (
     <div className="space-y-6">
+      {loadError && (
+        <div className="rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {loadError}
+        </div>
+      )}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Revenue</h1>
         <Button render={<Link href="/invoices/new" />}>

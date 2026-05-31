@@ -61,6 +61,7 @@ export default function ExpensesPage() {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingTx, setEditingTx] = useState<Transaction | null>(null);
 
@@ -83,8 +84,9 @@ export default function ExpensesPage() {
       setTransactions(txRes.data);
       setTotal(txRes.pagination.total);
       setCategories(catRes);
-    } catch {
-      // API may not be ready
+      setLoadError(null);
+    } catch (err) {
+      setLoadError(err instanceof Error ? err.message : "Failed to load expenses");
     } finally {
       setLoading(false);
     }
@@ -152,6 +154,11 @@ export default function ExpensesPage() {
 
   return (
     <div className="space-y-6">
+      {loadError && (
+        <div className="rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {loadError}
+        </div>
+      )}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Expenses</h1>
         <Dialog

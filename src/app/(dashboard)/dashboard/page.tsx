@@ -58,6 +58,7 @@ export default function DashboardPage() {
     { month: string; revenue: number; expenses: number }[]
   >([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -95,8 +96,9 @@ export default function DashboardPage() {
         results.sort((a, b) => b.idx - a.idx);
         for (const r of results) months.push(r);
         setMonthlyData(months);
-      } catch {
-        // API might not be ready yet
+        setLoadError(null);
+      } catch (err) {
+        setLoadError(err instanceof Error ? err.message : "Failed to load dashboard");
       } finally {
         setLoading(false);
       }
@@ -124,6 +126,12 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Dashboard</h1>
+
+      {loadError && (
+        <div className="rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {loadError}
+        </div>
+      )}
 
       <div className="grid gap-4 md:grid-cols-3">
         <Card>

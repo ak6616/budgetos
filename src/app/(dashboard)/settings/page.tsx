@@ -72,6 +72,7 @@ export default function SettingsPage() {
     address: "",
     taxId: "",
   });
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
     try {
@@ -81,8 +82,9 @@ export default function SettingsPage() {
       ]);
       setCategories(cats);
       setClients(cls);
-    } catch {
-      // API may not be ready
+      setLoadError(null);
+    } catch (err) {
+      setLoadError(err instanceof Error ? err.message : "Failed to load settings");
     }
   }, []);
 
@@ -129,6 +131,12 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Settings</h1>
+
+      {loadError && (
+        <div className="rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {loadError}
+        </div>
+      )}
 
       <Card>
         <CardHeader>
