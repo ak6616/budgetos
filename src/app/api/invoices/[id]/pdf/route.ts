@@ -47,8 +47,11 @@ const styles = StyleSheet.create({
   footer: { position: "absolute", bottom: 40, left: 40, right: 40, textAlign: "center", color: "#999", fontSize: 8 },
 });
 
-function formatCents(cents: number): string {
-  return `$${(cents / 100).toFixed(2)}`;
+function formatMoney(cents: number, currency: string): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currency || "USD",
+  }).format(cents / 100);
 }
 
 function InvoicePDF({
@@ -62,6 +65,7 @@ function InvoicePDF({
   business: typeof businesses.$inferSelect;
   client: typeof clients.$inferSelect;
 }) {
+  const currency = business.currency || "USD";
   return React.createElement(
     Document,
     null,
@@ -127,8 +131,8 @@ function InvoicePDF({
           { key: i, style: styles.tableRow },
           React.createElement(Text, { style: styles.colDesc }, item.description),
           React.createElement(Text, { style: styles.colQty }, String(item.quantity)),
-          React.createElement(Text, { style: styles.colPrice }, formatCents(item.unitPriceCents)),
-          React.createElement(Text, { style: styles.colTotal }, formatCents(item.totalCents))
+          React.createElement(Text, { style: styles.colPrice }, formatMoney(item.unitPriceCents, currency)),
+          React.createElement(Text, { style: styles.colTotal }, formatMoney(item.totalCents, currency))
         )
       ),
       React.createElement(
@@ -138,19 +142,19 @@ function InvoicePDF({
           View,
           { style: styles.totalRow },
           React.createElement(Text, { style: styles.totalLabel }, "Subtotal:"),
-          React.createElement(Text, { style: styles.totalValue }, formatCents(invoice.subtotalCents))
+          React.createElement(Text, { style: styles.totalValue }, formatMoney(invoice.subtotalCents, currency))
         ),
         React.createElement(
           View,
           { style: styles.totalRow },
           React.createElement(Text, { style: styles.totalLabel }, `Tax (${invoice.taxRate}%):`),
-          React.createElement(Text, { style: styles.totalValue }, formatCents(invoice.taxCents))
+          React.createElement(Text, { style: styles.totalValue }, formatMoney(invoice.taxCents, currency))
         ),
         React.createElement(
           View,
           { style: styles.totalRow },
           React.createElement(Text, { style: { ...styles.totalLabel, ...styles.grandTotal } }, "Total:"),
-          React.createElement(Text, { style: { ...styles.totalValue, ...styles.grandTotal } }, formatCents(invoice.totalCents))
+          React.createElement(Text, { style: { ...styles.totalValue, ...styles.grandTotal } }, formatMoney(invoice.totalCents, currency))
         )
       ),
       invoice.notes

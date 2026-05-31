@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { invoices } from "@/lib/db/schema";
+import { invoices, businesses } from "@/lib/db/schema";
 import { getBusinessIdFromRequest } from "@/lib/auth";
 import { stripe } from "@/lib/stripe";
 import { eq, and } from "drizzle-orm";
@@ -26,6 +26,12 @@ export async function POST(
       return NextResponse.json({ error: "Invoice already paid" }, { status: 400 });
     }
 
+    const [business] = await db
+      .select()
+      .from(businesses)
+      .where(eq(businesses.id, businessId));
+    const currency = (business?.currency || "usd").toLowerCase();
+
     if (invoice.stripePaymentIntent) {
       const existing = await stripe.paymentIntents.retrieve(
         invoice.stripePaymentIntent
@@ -38,7 +44,7 @@ export async function POST(
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: invoice.totalCents,
-      currency: "usd",
+      currency,
       metadata: {
         invoiceId: invoice.id,
         invoiceNumber: invoice.invoiceNumber,

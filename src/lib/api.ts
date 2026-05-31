@@ -70,6 +70,25 @@ export async function apiFetch<T = unknown>(
   return res as unknown as T;
 }
 
+/**
+ * Pobiera chroniony plik z API przez apiFetch (dokłada Bearer + obsługa refresh),
+ * zamienia odpowiedź na Blob i wyzwala download w przeglądarce.
+ * Naprawia bug: nawigacja przeglądarki nie dosyła tokenu z localStorage,
+ * więc bezpośrednie wejście na endpoint pliku zwracało 401.
+ */
+export async function downloadFile(path: string, filename: string): Promise<void> {
+  const res = await apiFetch<Response>(path);
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
 export function formatCents(cents: number, currency = "USD"): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",

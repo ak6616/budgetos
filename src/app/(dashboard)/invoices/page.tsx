@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { apiFetch, formatCents } from "@/lib/api";
+import { apiFetch, formatCents, downloadFile } from "@/lib/api";
 import { FileDownIcon, PlusIcon } from "lucide-react";
 
 interface Invoice {
@@ -39,8 +40,20 @@ const statusColor: Record<string, "default" | "secondary" | "destructive"> = {
 };
 
 export default function InvoicesPage() {
+  const router = useRouter();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
+
+  async function handleDownload(inv: Invoice) {
+    try {
+      await downloadFile(
+        `/invoices/${inv.id}/pdf`,
+        `invoice-${inv.invoiceNumber}.pdf`
+      );
+    } catch {
+      // błąd pobierania ignorowany cicho — przycisk pozostaje aktywny
+    }
+  }
 
   const load = useCallback(async () => {
     try {
@@ -103,7 +116,11 @@ export default function InvoicesPage() {
               </TableHeader>
               <TableBody>
                 {invoices.map((inv) => (
-                  <TableRow key={inv.id}>
+                  <TableRow
+                    key={inv.id}
+                    className="cursor-pointer hover:bg-muted/50"
+                    onClick={() => router.push(`/invoices/${inv.id}`)}
+                  >
                     <TableCell className="font-medium">
                       {inv.invoiceNumber}
                     </TableCell>
@@ -118,14 +135,17 @@ export default function InvoicesPage() {
                       {formatCents(inv.totalCents)}
                     </TableCell>
                     <TableCell className="text-right">
-                      <a
-                        href={`/api/invoices/${inv.id}/pdf`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center text-sm text-primary hover:underline"
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label="Download PDF"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDownload(inv);
+                        }}
                       >
                         <FileDownIcon className="h-4 w-4" />
-                      </a>
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
